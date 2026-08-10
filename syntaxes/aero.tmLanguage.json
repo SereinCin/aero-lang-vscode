@@ -1,0 +1,68 @@
+{
+  "scopeName": "source.aero",
+  "name": "Aero",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#booleans" },
+    { "include": "#types" },
+    { "include": "#builtins" },
+    { "include": "#numbers" },
+    { "include": "#functions" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "begin": "/\\*", "end": "\\*/", "name": "comment.block.aero" },
+        { "match": "//.*$", "name": "comment.line.double-slash.aero" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.aero",
+          "patterns": [
+            { "match": "\\\\(n|t|r|\\\\|\")", "name": "constant.character.escape.aero" }
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "match": "\\b(let|fn|if|else|while|return|extern|gpu|arena|tensor)\\b",
+      "name": "keyword.control.aero"
+    },
+    "booleans": {
+      "match": "\\b(true|false)\\b",
+      "name": "constant.language.boolean.aero"
+    },
+    "types": {
+      "match": "\\b(i32|i64|bool|str|void)\\b",
+      "name": "storage.type.aero"
+    },
+    "builtins": {
+      "match": "\\b(print|assert|assert_eq|matmul|len|int_to_str|str_free|substr|str_to_int|str_contains|str_find|str_cmp)\\b",
+      "name": "support.function.builtin.aero"
+    },
+    "numbers": {
+      "match": "\\b\\d+\\b",
+      "name": "constant.numeric.integer.aero"
+    },
+    "functions": {
+      "patterns": [
+        {
+          "match": "\\bfn\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "entity.name.function.aero" }
+          }
+        },
+        {
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\s*(?=\\()",
+          "name": "entity.name.function.aero"
+        }
+      ]
+    }
+  }
+}
