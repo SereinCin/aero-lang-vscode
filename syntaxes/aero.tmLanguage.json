@@ -43,7 +43,7 @@
       "name": "storage.type.aero"
     },
     "builtins": {
-      "match": "\\b(print|assert|assert_eq|matmul|len|int_to_str|str_free|substr|str_to_int|str_contains|str_find|str_cmp)\\b",
+      "match": "\\b(print|assert|assert_eq|matmul|len|int_to_str|str_free|substr|str_to_int|str_contains|str_find|str_cmp|read_file|write_file|arg_count|arg)\b",
       "name": "support.function.builtin.aero"
     },
     "numbers": {
