@@ -2,7 +2,7 @@
   "name": "aero-lang",
   "displayName": "Aero Language",
   "description": "Lightweight support for the Aero programming language: syntax highlighting, language config, and one-key compile/run in the integrated terminal.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "serein",
   "engines": {
     "vscode": "^1.85.0"
