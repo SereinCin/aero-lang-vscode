@@ -2,7 +2,9 @@
 
 ![Aero](icon.png)
 
-Syntax highlighting and LSP client for the [Aero](https://github.com/aero-lang/aero) programming language.
+Syntax highlighting and LSP client for the [Aero](https://github.com/SereinCin/aero-lang) programming language.
+
+> **Note: offline install only — not published on the VS Code Marketplace.**
 
 The extension provides **static syntax highlighting** out of the box. When a
 compiler binary path is configured, it also spawns `aero --lsp` as a subprocess
@@ -45,9 +47,10 @@ When `aero.lsp.executablePath` is set, the extension:
   support. Obtain it from the Aero project release page. The compiler is not
   bundled with this extension.
 
-## Install
+## Install (offline)
 
-From a `.vsix` file:
+This extension is **not published on the VS Code Marketplace** and must be
+installed **offline from a `.vsix` file**.
 
 ```
 code --install-extension aero-lang-1.1.0.vsix
