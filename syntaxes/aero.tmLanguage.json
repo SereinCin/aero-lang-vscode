@@ -1,67 +1,146 @@
 {
   "scopeName": "source.aero",
   "name": "Aero",
+  "fileTypes": ["aero"],
   "patterns": [
     { "include": "#comments" },
     { "include": "#strings" },
-    { "include": "#keywords" },
-    { "include": "#booleans" },
-    { "include": "#types" },
-    { "include": "#builtins" },
+    { "include": "#chars" },
+    { "include": "#lifetimes" },
     { "include": "#numbers" },
-    { "include": "#functions" }
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#booleans" },
+    { "include": "#builtins" },
+    { "include": "#self" },
+    { "include": "#function-declaration" },
+    { "include": "#type-declaration" },
+    { "include": "#impl-declaration" },
+    { "include": "#enum-variant-path" },
+    { "include": "#function-call" },
+    { "include": "#member-access" },
+    { "include": "#operators" }
   ],
   "repository": {
     "comments": {
       "patterns": [
+        { "begin": "/\\*\\*", "end": "\\*/", "name": "comment.block.documentation.aero" },
         { "begin": "/\\*", "end": "\\*/", "name": "comment.block.aero" },
-        { "match": "//.*$", "name": "comment.line.double-slash.aero" }
+        { "match": "///.*$", "name": "comment.line.documentation.aero" },
+        { "match": "//.*$", "name": "comment.line.aero" }
       ]
     },
     "strings": {
       "patterns": [
         {
+          "name": "string.quoted.double.aero",
           "begin": "\"",
           "end": "\"",
-          "name": "string.quoted.double.aero",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.aero" } },
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.aero" } },
           "patterns": [
-            { "match": "\\\\(n|t|r|\\\\|\")", "name": "constant.character.escape.aero" }
+            { "match": "\\\\(?:[abfnrtv0\\\\'\"?]|u\\{[0-9a-fA-F]+\\})", "name": "constant.character.escape.aero" },
+            { "match": "%[-+ 0-9.]*[a-zA-Z%]", "name": "constant.other.placeholder.aero" }
           ]
         }
       ]
     },
-    "keywords": {
-      "match": "\\b(let|fn|if|else|while|return|extern|gpu|arena|tensor)\\b",
-      "name": "keyword.control.aero"
+    "chars": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.aero",
+          "match": "'(?:[^'\\\\\\n]|\\\\(?:[abfnrtv0\\\\'\"?]|u\\{[0-9a-fA-F]+\\}))'"
+        }
+      ]
     },
-    "booleans": {
-      "match": "\\b(true|false)\\b",
-      "name": "constant.language.boolean.aero"
-    },
-    "types": {
-      "match": "\\b(i32|i64|bool|str|void)\\b",
-      "name": "storage.type.aero"
-    },
-    "builtins": {
-      "match": "\\b(print|assert|assert_eq|matmul|len|int_to_str|str_free|substr|str_to_int|str_contains|str_find|str_cmp|read_file|write_file|arg_count|arg)\b",
-      "name": "support.function.builtin.aero"
+    "lifetimes": {
+      "patterns": [
+        { "match": "'[a-zA-Z_][a-zA-Z0-9_]*", "name": "variable.language.lifetime.aero" }
+      ]
     },
     "numbers": {
-      "match": "\\b\\d+\\b",
-      "name": "constant.numeric.integer.aero"
+      "patterns": [
+        { "match": "\\b[0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?\\b", "name": "constant.numeric.float.aero" },
+        { "match": "\\b[0-9]+[eE][+-]?[0-9]+\\b", "name": "constant.numeric.float.aero" },
+        { "match": "\\b[0-9]+\\b", "name": "constant.numeric.integer.aero" }
+      ]
     },
-    "functions": {
+    "keywords": {
+      "patterns": [
+        { "match": "\\b(let|if|else|while|loop|for|in|return|break|continue|match|as|mut)\\b", "name": "keyword.control.aero" },
+        { "match": "\\b(fn|struct|union|enum|trait|impl|type|dyn|const|mod|use|pub|crate|extern|arena|tensor|gpu)\\b", "name": "keyword.declaration.aero" }
+      ]
+    },
+    "types": {
+      "patterns": [
+        { "match": "\\b(i32|i64|f32|f64|char|bool|str|void)\\b", "name": "storage.type.primitive.aero" },
+        { "match": "\\b(String|Vec|Box|Option|Result|HashMap|HashSet|BTreeMap|BTreeSet|LinkedList|Grad|Self)\\b", "name": "storage.type.std.aero" },
+        { "match": "\\b(Some|None|Ok|Err)\\b", "name": "constant.language.constructor.aero" }
+      ]
+    },
+    "booleans": {
+      "patterns": [
+        { "match": "\\b(true|false)\\b", "name": "constant.language.boolean.aero" }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        { "match": "\\b(print|assert|assert_eq|len|int_to_str|str_to_int|str_contains|str_find|str_cmp|str_free|substr|read_file|write_file|arg_count|arg|format|hash_i64|str_hash|matmul|sum|tensor_add|blas_dot)\\b", "name": "support.function.builtin.aero" }
+      ]
+    },
+    "self": {
+      "patterns": [
+        { "match": "\\bself\\b", "name": "variable.language.self.aero" }
+      ]
+    },
+    "function-declaration": {
       "patterns": [
         {
           "match": "\\bfn\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-          "captures": {
-            "1": { "name": "entity.name.function.aero" }
-          }
-        },
-        {
-          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\s*(?=\\()",
-          "name": "entity.name.function.aero"
+          "captures": { "1": { "name": "entity.name.function.aero" } }
         }
+      ]
+    },
+    "type-declaration": {
+      "patterns": [
+        {
+          "match": "\\b(struct|union|enum|trait|type)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": { "2": { "name": "entity.name.type.aero" } }
+        }
+      ]
+    },
+    "impl-declaration": {
+      "patterns": [
+        {
+          "match": "\\bimpl\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": { "1": { "name": "entity.name.type.aero" } }
+        }
+      ]
+    },
+    "enum-variant-path": {
+      "patterns": [
+        {
+          "match": "\\b([A-Z][a-zA-Z0-9_]*)\\s*::\\s*([A-Z][a-zA-Z0-9_]*)",
+          "captures": { "2": { "name": "constant.other.enum.aero" } }
+        }
+      ]
+    },
+    "function-call": {
+      "patterns": [
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()",
+          "captures": { "1": { "name": "entity.name.function.aero" } }
+        }
+      ]
+    },
+    "member-access": {
+      "patterns": [
+        { "match": "(?<=\\.)\\s*[a-zA-Z_][a-zA-Z0-9_]*", "name": "variable.other.member.aero" }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        { "match": "(->|=>|::|==|!=|<=|>=|<<|>>|&&|\\|\\||[\\^+\\-*/%&|=!<>?:])", "name": "keyword.operator.aero" }
       ]
     }
   }

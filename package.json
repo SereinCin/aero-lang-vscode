@@ -1,20 +1,21 @@
 {
   "name": "aero-lang",
   "displayName": "Aero Language",
-  "description": "Lightweight support for the Aero programming language: syntax highlighting, language config, and one-key compile/run in the integrated terminal.",
-  "version": "0.1.1",
+  "description": "Syntax highlighting + LSP client for the Aero programming language.",
+  "version": "1.1.0",
   "publisher": "serein",
   "engines": {
     "vscode": "^1.85.0"
   },
   "categories": [
-    "Programming Languages",
-    "Snippets"
+    "Programming Languages"
   ],
   "keywords": [
     "aero",
     "language",
-    "compiler"
+    "syntax",
+    "highlighting",
+    "lsp"
   ],
   "icon": "icon.png",
   "license": "MIT",
@@ -43,81 +44,13 @@
         "path": "./syntaxes/aero.tmLanguage.json"
       }
     ],
-    "snippets": [
-      {
-        "language": "aero",
-        "path": "./snippets/aero.code-snippets"
-      }
-    ],
-    "commands": [
-      {
-        "command": "aero.run",
-        "title": "Aero: Run File",
-        "icon": "$(play)"
-      },
-      {
-        "command": "aero.build",
-        "title": "Aero: Build File",
-        "icon": "$(tools)"
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "aero.run",
-        "key": "ctrl+alt+r",
-        "when": "editorTextFocus && editorLangId == aero"
-      },
-      {
-        "command": "aero.build",
-        "key": "ctrl+alt+b",
-        "when": "editorTextFocus && editorLangId == aero"
-      }
-    ],
-    "menus": {
-      "editor/title": [
-        {
-          "command": "aero.run",
-          "group": "navigation@1",
-          "when": "editorLangId == aero"
-        },
-        {
-          "command": "aero.build",
-          "group": "navigation@2",
-          "when": "editorLangId == aero"
-        }
-      ],
-      "editor/context": [
-        {
-          "command": "aero.run",
-          "group": "aero@1",
-          "when": "editorLangId == aero"
-        },
-        {
-          "command": "aero.build",
-          "group": "aero@2",
-          "when": "editorLangId == aero"
-        }
-      ],
-      "explorer/context": [
-        {
-          "command": "aero.run",
-          "group": "aero@1",
-          "when": "resourceLangId == aero"
-        },
-        {
-          "command": "aero.build",
-          "group": "aero@2",
-          "when": "resourceLangId == aero"
-        }
-      ]
-    },
     "configuration": {
       "title": "Aero",
       "properties": {
-        "aero.compilerPath": {
+        "aero.lsp.executablePath": {
           "type": "string",
           "default": "",
-          "description": "Path to the aero compiler executable. Empty = resolve via AERO_HOME env var, then PATH."
+          "description": "Absolute path to the aero compiler binary. When set, the extension spawns `aero --lsp` for real-time diagnostics. Leave empty for syntax highlighting only."
         }
       }
     }

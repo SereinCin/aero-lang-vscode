@@ -2,62 +2,80 @@
 
 ![Aero](icon.png)
 
-Lightweight support for the [Aero](https://github.com/aero-lang/aero) programming language: syntax highlighting, language configuration, and one-key compile/run in the integrated terminal. No LSP by design — fast, minimal, hardcore.
+Syntax highlighting and LSP client for the [Aero](https://github.com/aero-lang/aero) programming language.
+
+The extension provides **static syntax highlighting** out of the box. When a
+compiler binary path is configured, it also spawns `aero --lsp` as a subprocess
+for **real-time diagnostics** (error/warning squiggles underlining).
 
 ## Features
 
-- **File binding** — `.aero` files are recognized as Aero source.
-- **Syntax highlighting** — keywords, primitive types, function identifiers, single/multi-line comments, string constants, and numeric literals get distinct colors.
-- **Language configuration** — auto-indentation, quote auto-pairing, bracket matching & bracket colorization.
-- **One-key compile/run** — run or build the active `.aero` file with the local Aero compiler; logs and program output go straight to the integrated terminal, compiler errors included.
-- **Snippets** — blank console program template + loop skeleton.
+### Syntax highlighting (always on)
+- Full Aero language grammar: keywords, types, builtins, string/char/number/boolean literals, comments, doc comments, operator coloring, function definitions & calls, type definitions, struct/enum/trait/impl names, enum variant paths, member access, and lifetime parameters.
+- Language configuration: bracket matching, quote auto-pairing, comment toggling, indentation rules for all block constructs.
+
+  | Category | Covered |
+  |---|---|
+  | Keywords | `let`, `fn`, `if`/`else`, `while`, `loop`, `for`/`in`, `return`, `break`, `continue`, `match`, `as`, `mut` |
+  | Declarations | `struct`, `union`, `enum`, `trait`, `impl`, `type`, `dyn`, `const`, `mod`, `use`, `pub`, `crate`, `extern`, `arena`, `tensor`, `gpu` |
+  | Primitive types | `i32`, `i64`, `f32`, `f64`, `char`, `bool`, `str`, `void` |
+  | Standard types | `String`, `Vec`, `Box`, `Option`, `Result`, `HashMap`, `HashSet`, `BTreeMap`, `BTreeSet`, `LinkedList`, `Grad`, `Self` |
+  | Builtins | `print`, `assert`, `assert_eq`, `len`, `int_to_str`, `str_to_int`, `str_contains`, `str_find`, `str_cmp`, `str_free`, `substr`, `read_file`, `write_file`, `arg_count`, `arg`, `format`, `hash_i64`, `str_hash`, `matmul`, `sum`, `tensor_add`, `blas_dot` |
+  | Constructors | `Some`, `None`, `Ok`, `Err` |
+  | Literals | integer & float numbers, strings with escape sequences and `%`-placeholders, char literals (`'a'`, `'\n'`), booleans |
+  | Comments | `//`, `/* */` and doc comments `///`, `/** */` |
+  | Structure | function definitions & calls, struct/union/enum/trait/type names, `impl` targets, enum variant paths (`Maybe::Just`), member access (`r.origin.y`), lifetime params (`'a`) |
+  | Operators | `->`, `=>`, `::`, `==`, `!=`, `<=`, `>=`, `<<`, `>>`, `&&`, `\|\|`, arithmetic, bitwise (`&`, `\|`, `^`) & assignment |
+
+### LSP diagnostics (opt-in)
+When `aero.lsp.executablePath` is set, the extension:
+
+- Spawns `aero --lsp` as a subprocess and communicates via JSON-RPC 2.0 over
+  stdin/stdout (Content-Length framing).
+- Performs the full LSP initialization handshake (`initialize` → `initialized`).
+- Sends document text on every edit (`textDocument/didChange`).
+- Receives compiler diagnostics and displays them as error/warning squiggles
+  in the editor (Problems panel, inline underlines, scrollbar markers).
+- Also supports hover, go-to-definition, and completion (server-side).
 
 ## Requirements
 
 - VS Code 1.85+
-- The Aero compiler (`aero.exe`). The extension resolves it in this order:
-  1. the `aero.compilerPath` setting,
-  2. the `AERO_HOME` environment variable (pointing at the compiler binary, or at a directory containing `aero.exe` / `bin/aero.exe` / `target/debug/aero.exe`),
-  3. `aero` on `PATH`.
+- **For LSP diagnostics:** The Aero compiler binary (`aero.exe`) with `--lsp`
+  support. Obtain it from the Aero project release page. The compiler is not
+  bundled with this extension.
+
+## Install
+
+From a `.vsix` file:
+
+```
+code --install-extension aero-lang-1.1.0.vsix
+```
+
+Or copy this folder to your extensions directory and restart VS Code:
+
+```
+%USERPROFILE%\.vscode\extensions\serein.aero-lang-1.1.0
+```
 
 ## Usage
 
-Open a `.aero` file, then:
+1. Install the extension.
+2. Open VS Code settings (`Ctrl+,`), search for `aero.lsp.executablePath`.
+3. Set it to the absolute path of your `aero.exe` (e.g. `C:\Aero\bin\aero.exe`).
+4. Open any `.aero` file — syntax highlighting is immediate; LSP diagnostics
+   appear after the compiler process initializes (a few seconds).
 
-| Action | Shortcut | Also available |
-|---|---|---|
-| Run file (`aero run <file>`) | `Ctrl+Alt+R` | title-bar / editor / explorer context menu |
-| Build file (`aero build <file>`) | `Ctrl+Alt+B` | title-bar / editor / explorer context menu |
+If no executable path is configured, the extension provides syntax highlighting
+only — no diagnostics, no LSP.
 
-The compiler command runs in a dedicated integrated terminal (`Aero Run` / `Aero Build`). Build errors are printed there as plain text.
-
-> `aero build <file>` produces `<file>.exe` next to the source (AOT); `aero run` executes via JIT.
-
-## Local install (no marketplace)
-
-Copy this folder to your extensions directory:
-
-```
-%USERPROFILE%\.vscode\extensions\serein.aero-lang-0.1.0
-```
-
-Restart VS Code. (For development, open this folder in VS Code and press `F5`.)
-
-## Package a VSIX for the marketplace
+## Package a VSIX
 
 ```sh
 npm i -g @vscode/vsce
 vsce package
 ```
-
-The resulting `aero-lang-0.1.0.vsix` can be installed with `code --install-extension` or uploaded to the VS Code Marketplace.
-
-## Snippets
-
-| Prefix | Content |
-|---|---|
-| `aero` | Blank console program template |
-| `aero-loop` | While-loop skeleton |
 
 ## License
 
