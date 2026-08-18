@@ -11,7 +11,8 @@ A VS Code extension providing syntax support for the Aero programming language.
 
 ## Important Notice
 
-This extension is **not published** on the VS Code Marketplace. It is only available for offline installation via `.vsix` file.
+This extension has been officially published on the VS Code Marketplace.
+You may also install manually offline using the `.vsix` file.
 
 ## Installation
 
