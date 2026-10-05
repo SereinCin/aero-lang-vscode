@@ -50,6 +50,16 @@ Aero version:
 - `VS Code Extension 1.1.x/` — packages compatible with the Aero **1.1.x**
   series
 
+## Collaboration
+
+Aero language extension is built through human–AI collaboration — the AI is
+trained on the Aero toolchain and GitHub workflow. Code contributions are
+~55% AI / ~45% team. All merged code passes a deepfake-style check (AI code
+detection + semantic review) before landing.
+
+See the main [aero-lang](https://github.com/SereinCin/aero-lang) repository
+for full methodology details.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
